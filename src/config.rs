@@ -1179,6 +1179,13 @@ mod tests {
         let res: Tunables =
             serde_json::from_str("{\"username_display\": \"displayname\"}").unwrap();
         assert_eq!(res.username_display, Some(UserDisplayStyle::DisplayName));
+
+        let res: Tunables = serde_json::from_str(
+            "{\"username_display\": \"regex\",\n\"username_display_regex\": \"foo\"}",
+        )
+        .unwrap();
+        assert_eq!(res.username_display, Some(UserDisplayStyle::Regex));
+        assert_eq!(res.username_display_regex.unwrap_or("FAILED".into()), "foo".to_string());
     }
 
     #[test]
