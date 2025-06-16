@@ -189,6 +189,7 @@ pub fn mock_tunables() -> TunableValues {
         open_command: None,
         external_edit_file_suffix: String::from(".md"),
         username_display: UserDisplayStyle::Username,
+        username_display_regex: Some(String::from(".*")),
         message_user_color: false,
         mouse: Default::default(),
         notifications: Notifications {
