@@ -404,6 +404,9 @@ pub enum UserDisplayStyle {
     // it can wind up being the Matrix username if there are display name collisions in the room,
     // in order to avoid any confusion.
     DisplayName,
+
+    // Acts like Username, except when the username matches given regex, then acts like DisplayName
+    Regex,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -579,6 +582,7 @@ pub struct TunableValues {
     pub typing_notice_display: bool,
     pub users: UserOverrides,
     pub username_display: UserDisplayStyle,
+    pub username_display_regex: Option<String>,
     pub message_user_color: bool,
     pub default_room: Option<String>,
     pub open_command: Option<Vec<String>>,
@@ -608,6 +612,7 @@ pub struct Tunables {
     pub typing_notice_display: Option<bool>,
     pub users: Option<UserOverrides>,
     pub username_display: Option<UserDisplayStyle>,
+    pub username_display_regex: Option<String>,
     pub message_user_color: Option<bool>,
     pub default_room: Option<String>,
     pub open_command: Option<Vec<String>>,
@@ -641,6 +646,7 @@ impl Tunables {
             typing_notice_display: self.typing_notice_display.or(other.typing_notice_display),
             users: merge_maps(self.users, other.users),
             username_display: self.username_display.or(other.username_display),
+            username_display_regex: self.username_display_regex.or(other.username_display_regex),
             message_user_color: self.message_user_color.or(other.message_user_color),
             default_room: self.default_room.or(other.default_room),
             open_command: self.open_command.or(other.open_command),
@@ -672,6 +678,7 @@ impl Tunables {
             typing_notice_display: self.typing_notice_display.unwrap_or(true),
             users: self.users.unwrap_or_default(),
             username_display: self.username_display.unwrap_or_default(),
+            username_display_regex: self.username_display_regex,
             message_user_color: self.message_user_color.unwrap_or(false),
             default_room: self.default_room,
             open_command: self.open_command,
@@ -1068,6 +1075,20 @@ impl ApplicationSettings {
                     } else {
                         Cow::Borrowed(name.as_str())
                     }
+                } else {
+                    Cow::Borrowed(user_id.as_str())
+                }
+            },
+            (None, UserDisplayStyle::Regex) => {
+                let re = regex::Regex::new(
+                    &self.tunables.username_display_regex.clone().unwrap_or("*".into()),
+                )
+                .unwrap();
+
+                if !re.is_match(user_id.as_str()) {
+                    Cow::Borrowed(user_id.as_str())
+                } else if let Some(display) = info.display_names.get(user_id) {
+                    Cow::Borrowed(display.0.as_str())
                 } else {
                     Cow::Borrowed(user_id.as_str())
                 }
