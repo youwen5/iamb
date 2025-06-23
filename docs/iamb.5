@@ -208,6 +208,9 @@ See
 .Sx "SORTING LISTS"
 for more details.
 
+.It Sy state_event_display
+Defines whether the state events like joined or left are shown.
+
 .It Sy typing_notice_send
 Defines whether or not the typing state is sent.
 
@@ -231,6 +234,10 @@ Possible values are
 Specify the width of the column where usernames are displayed in a room.
 Usernames that are too long are truncated.
 Defaults to 30.
+
+.It Sy tabstop
+Number of spaces that a <Tab> counts for.
+Defaults to 4.
 .El
 
 .Ss Example 1: Avoid showing Emojis (useful for terminals w/o support)
