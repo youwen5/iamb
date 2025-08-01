@@ -177,7 +177,8 @@ fn placeholder_frame(
     image_preview_size: &ImagePreviewSize,
 ) -> Option<String> {
     let ImagePreviewSize { width, height } = image_preview_size;
-    if outer_width < *width || (*width < 2 || *height < 2) {
+    let width = usize::min(*width, outer_width);
+    if width < 2 || *height < 2 {
         return None;
     }
     let mut placeholder = "\u{230c}".to_string();
@@ -1454,7 +1455,17 @@ pub mod tests {
             )
         );
 
-        assert_eq!(placeholder_frame(None, 2, &ImagePreviewSize { width: 4, height: 4 }), None);
+        assert_eq!(
+            placeholder_frame(None, 2, &ImagePreviewSize { width: 4, height: 4 }),
+            pretty_frame_test(
+                r#"
+⌌⌍
+
+
+⌎⌏
+"#
+            )
+        );
         assert_eq!(placeholder_frame(None, 4, &ImagePreviewSize { width: 1, height: 4 }), None);
 
         assert_eq!(placeholder_frame(None, 4, &ImagePreviewSize { width: 4, height: 1 }), None);
