@@ -666,6 +666,7 @@ impl MessageColumns {
 
 struct MessageFormatter<'a> {
     settings: &'a ApplicationSettings,
+    info: &'a RoomInfo,
 
     /// How many columns to print.
     cols: MessageColumns,
@@ -781,7 +782,7 @@ impl<'a> MessageFormatter<'a> {
     ) -> Option<ProtocolPreview<'a>> {
         let width = self.width();
         let w = width.saturating_sub(2);
-        let (mut replied, proto) = msg.show_msg(w, style, true, settings, previews);
+        let (mut replied, proto) = msg.show_msg(w, style, true, settings, info, previews);
         let mut sender = msg.sender_span(info, self.settings);
         let sender_width = UnicodeWidthStr::width(sender.content.as_ref());
         let trailing = w.saturating_sub(sender_width + 1);
@@ -819,7 +820,8 @@ impl<'a> MessageFormatter<'a> {
     }
 
     fn push_reactions(&mut self, counts: Vec<(&'a str, usize)>, style: Style, text: &mut Text<'a>) {
-        let mut emojis = printer::TextPrinter::new(self.width(), style, false, self.settings);
+        let mut emojis =
+            printer::TextPrinter::new(self.width(), style, false, self.settings, self.info);
         let mut reactions = 0;
 
         for (key, count) in counts {
@@ -868,7 +870,8 @@ impl<'a> MessageFormatter<'a> {
         let plural = len != 1;
         let style = Style::default();
         let mut threaded =
-            printer::TextPrinter::new(self.width(), style, false, self.settings).literal(true);
+            printer::TextPrinter::new(self.width(), style, false, self.settings, self.info)
+                .literal(true);
         let len = Span::styled(len.to_string(), style.add_modifier(StyleModifier::BOLD));
         threaded.push_str(" \u{2937} ", style);
         threaded.push_span_nobreak(len);
@@ -1006,7 +1009,17 @@ impl Message {
                 .map(|user_id| user_id.to_owned())
                 .collect();
 
-            MessageFormatter { settings, cols, orig, fill, user, date, time, read }
+            MessageFormatter {
+                settings,
+                cols,
+                orig,
+                fill,
+                user,
+                date,
+                time,
+                read,
+                info,
+            }
         } else if user_gutter + TIME_GUTTER + MIN_MSG_LEN <= width {
             let cols = MessageColumns::Three;
             let fill = width - user_gutter - TIME_GUTTER;
@@ -1014,7 +1027,17 @@ impl Message {
             let time = self.timestamp.show_time();
             let read = Vec::new();
 
-            MessageFormatter { settings, cols, orig, fill, user, date, time, read }
+            MessageFormatter {
+                settings,
+                cols,
+                orig,
+                fill,
+                user,
+                date,
+                time,
+                read,
+                info,
+            }
         } else if user_gutter + MIN_MSG_LEN <= width {
             let cols = MessageColumns::Two;
             let fill = width - user_gutter;
@@ -1022,7 +1045,17 @@ impl Message {
             let time = None;
             let read = Vec::new();
 
-            MessageFormatter { settings, cols, orig, fill, user, date, time, read }
+            MessageFormatter {
+                settings,
+                cols,
+                orig,
+                fill,
+                user,
+                date,
+                time,
+                read,
+                info,
+            }
         } else {
             let cols = MessageColumns::One;
             let fill = width.saturating_sub(2);
@@ -1030,7 +1063,17 @@ impl Message {
             let time = None;
             let read = Vec::new();
 
-            MessageFormatter { settings, cols, orig, fill, user, date, time, read }
+            MessageFormatter {
+                settings,
+                cols,
+                orig,
+                fill,
+                user,
+                date,
+                time,
+                read,
+                info,
+            }
         }
     }
 
@@ -1075,7 +1118,7 @@ impl Message {
         });
 
         // Now show the message contents, and the inlined reply if we couldn't find it above.
-        let (msg, proto) = self.show_msg(width, style, true, settings, previews);
+        let (msg, proto) = self.show_msg(width, style, true, settings, info, previews);
 
         // Given our text so far, determine the image offset.
         let proto_main = proto.map(|p| {
@@ -1135,10 +1178,11 @@ impl Message {
         style: Style,
         hide_reply: bool,
         settings: &'a ApplicationSettings,
+        info: &'a RoomInfo,
         previews: &'a PreviewManager,
     ) -> (Text<'a>, Option<&'a Protocol>) {
         if let Some(html) = &self.html {
-            (html.to_text(width, style, hide_reply, settings), None)
+            (html.to_text(width, style, hide_reply, settings, info), None)
         } else {
             let mut msg = self.event.body();
             if settings.tunables.message_shortcode_display {
