@@ -1437,7 +1437,7 @@ dependencies = [
 [[package]]
 name = "editor-types"
 version = "0.0.2"
-source = "git+https://github.com/ulyssa/modalkit?rev=6d05f301c08204e74e1e5bffe185fe5d90cce2e6#6d05f301c08204e74e1e5bffe185fe5d90cce2e6"
+source = "git+https://github.com/ulyssa/modalkit?rev=5a0e2f2b59b6f66d0a0f44eb662d5a77753ebfb7#5a0e2f2b59b6f66d0a0f44eb662d5a77753ebfb7"
 dependencies = [
  "bitflags 2.9.1",
  "editor-types-macros",
@@ -1448,7 +1448,7 @@ dependencies = [
 [[package]]
 name = "editor-types-macros"
 version = "0.0.2"
-source = "git+https://github.com/ulyssa/modalkit?rev=6d05f301c08204e74e1e5bffe185fe5d90cce2e6#6d05f301c08204e74e1e5bffe185fe5d90cce2e6"
+source = "git+https://github.com/ulyssa/modalkit?rev=5a0e2f2b59b6f66d0a0f44eb662d5a77753ebfb7#5a0e2f2b59b6f66d0a0f44eb662d5a77753ebfb7"
 dependencies = [
  "editor-types-parser",
  "nom",
@@ -1460,7 +1460,7 @@ dependencies = [
 [[package]]
 name = "editor-types-parser"
 version = "0.0.2"
-source = "git+https://github.com/ulyssa/modalkit?rev=6d05f301c08204e74e1e5bffe185fe5d90cce2e6#6d05f301c08204e74e1e5bffe185fe5d90cce2e6"
+source = "git+https://github.com/ulyssa/modalkit?rev=5a0e2f2b59b6f66d0a0f44eb662d5a77753ebfb7#5a0e2f2b59b6f66d0a0f44eb662d5a77753ebfb7"
 dependencies = [
  "nom",
  "thiserror 1.0.69",
@@ -2737,7 +2737,7 @@ dependencies = [
 [[package]]
 name = "keybindings"
 version = "0.0.2"
-source = "git+https://github.com/ulyssa/modalkit?rev=6d05f301c08204e74e1e5bffe185fe5d90cce2e6#6d05f301c08204e74e1e5bffe185fe5d90cce2e6"
+source = "git+https://github.com/ulyssa/modalkit?rev=5a0e2f2b59b6f66d0a0f44eb662d5a77753ebfb7#5a0e2f2b59b6f66d0a0f44eb662d5a77753ebfb7"
 dependencies = [
  "textwrap",
  "unicode-segmentation",
@@ -3368,7 +3368,7 @@ dependencies = [
 [[package]]
 name = "modalkit"
 version = "0.0.24"
-source = "git+https://github.com/ulyssa/modalkit?rev=6d05f301c08204e74e1e5bffe185fe5d90cce2e6#6d05f301c08204e74e1e5bffe185fe5d90cce2e6"
+source = "git+https://github.com/ulyssa/modalkit?rev=5a0e2f2b59b6f66d0a0f44eb662d5a77753ebfb7#5a0e2f2b59b6f66d0a0f44eb662d5a77753ebfb7"
 dependencies = [
  "anymap2",
  "arboard",
@@ -3382,6 +3382,7 @@ dependencies = [
  "radix_trie",
  "regex",
  "ropey",
+ "shellexpand",
  "thiserror 1.0.69",
  "unicode-segmentation",
  "unicode-width 0.1.14",
@@ -3390,7 +3391,7 @@ dependencies = [
 [[package]]
 name = "modalkit-ratatui"
 version = "0.0.24"
-source = "git+https://github.com/ulyssa/modalkit?rev=6d05f301c08204e74e1e5bffe185fe5d90cce2e6#6d05f301c08204e74e1e5bffe185fe5d90cce2e6"
+source = "git+https://github.com/ulyssa/modalkit?rev=5a0e2f2b59b6f66d0a0f44eb662d5a77753ebfb7#5a0e2f2b59b6f66d0a0f44eb662d5a77753ebfb7"
 dependencies = [
  "crossterm",
  "intervaltree",
@@ -5101,6 +5102,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f40ca3c46823713e0d4209592e8d6e826aa57e928f09752619fc696c499637f6"
 dependencies = [
  "lazy_static 1.5.0",
+]
+
+[[package]]
+name = "shellexpand"
+version = "3.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8b1fdf65dd6331831494dd616b30351c38e96e45921a27745cf98490458b90bb"
+dependencies = [
+ "dirs",
 ]
 
 [[package]]
