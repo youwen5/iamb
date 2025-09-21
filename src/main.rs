@@ -81,6 +81,7 @@ mod util;
 mod windows;
 mod worker;
 
+mod completions;
 #[cfg(test)]
 mod tests;
 
@@ -90,7 +91,6 @@ use crate::{
         ChatStore,
         HomeserverAction,
         IambAction,
-        IambCompleter,
         IambError,
         IambId,
         IambInfo,
@@ -100,6 +100,7 @@ use crate::{
         ProgramContext,
         ProgramStore,
     },
+    completions::IambCompleter,
     config::{ApplicationSettings, Iamb},
     windows::IambWindow,
     worker::{create_room, ClientWorker, LoginStyle, Requester},
@@ -628,6 +629,16 @@ impl Application {
                 None
             },
         };
+
+        if let Some(win) = self.screen.current_window() {
+            let event = if let IambWindow::Room(windows::room::RoomState::Chat(state)) = win {
+                state.current_message(store)
+            } else {
+                None
+            };
+
+            store.application.last_focus = (win.id(), event);
+        }
 
         return Ok(info);
     }
