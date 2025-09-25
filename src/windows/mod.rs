@@ -1695,7 +1695,7 @@ mod tests {
         let server = server_name!("example.com");
 
         let room1 = TestRoomItem {
-            room_id: RoomId::new(server).to_owned(),
+            room_id: RoomId::new_v1(server).to_owned(),
             tags: vec![TagName::Favorite],
             alias: Some(room_alias_id!("#room1:example.com").to_owned()),
             name: "Z",
@@ -1704,7 +1704,7 @@ mod tests {
         };
 
         let room2 = TestRoomItem {
-            room_id: RoomId::new(server).to_owned(),
+            room_id: RoomId::new_v1(server).to_owned(),
             tags: vec![],
             alias: Some(room_alias_id!("#a:example.com").to_owned()),
             name: "Unnamed Room",
@@ -1713,7 +1713,7 @@ mod tests {
         };
 
         let room3 = TestRoomItem {
-            room_id: RoomId::new(server).to_owned(),
+            room_id: RoomId::new_v1(server).to_owned(),
             tags: vec![],
             alias: None,
             name: "Cool Room",
@@ -1761,7 +1761,7 @@ mod tests {
         let server = server_name!("example.com");
 
         let room1 = TestRoomItem {
-            room_id: RoomId::new(server).to_owned(),
+            room_id: RoomId::new_v1(server).to_owned(),
             tags: vec![],
             alias: None,
             name: "Room 1",
@@ -1770,7 +1770,7 @@ mod tests {
         };
 
         let room2 = TestRoomItem {
-            room_id: RoomId::new(server).to_owned(),
+            room_id: RoomId::new_v1(server).to_owned(),
             tags: vec![],
             alias: None,
             name: "Room 2",
@@ -1782,7 +1782,7 @@ mod tests {
         };
 
         let room3 = TestRoomItem {
-            room_id: RoomId::new(server).to_owned(),
+            room_id: RoomId::new_v1(server).to_owned(),
             tags: vec![],
             alias: None,
             name: "Room 3",
@@ -1813,7 +1813,7 @@ mod tests {
         let server = server_name!("example.com");
 
         let room1 = TestRoomItem {
-            room_id: RoomId::new(server).to_owned(),
+            room_id: RoomId::new_v1(server).to_owned(),
             tags: vec![],
             alias: None,
             name: "Old room 1",
@@ -1822,7 +1822,7 @@ mod tests {
         };
 
         let room2 = TestRoomItem {
-            room_id: RoomId::new(server).to_owned(),
+            room_id: RoomId::new_v1(server).to_owned(),
             tags: vec![],
             alias: None,
             name: "Old room 2",
@@ -1831,7 +1831,7 @@ mod tests {
         };
 
         let room3 = TestRoomItem {
-            room_id: RoomId::new(server).to_owned(),
+            room_id: RoomId::new_v1(server).to_owned(),
             tags: vec![],
             alias: None,
             name: "New Fancy Room",

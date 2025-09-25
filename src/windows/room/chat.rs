@@ -599,7 +599,7 @@ impl ChatState {
                         }
                     }
                     let metadata = ReplacementMetadata::new(event_id.to_owned(), mentions);
-                    msg = msg.make_replacement(metadata, None);
+                    msg = msg.make_replacement(metadata);
 
                     show_echo = false;
                 } else if let Some(thread_root) = self.scrollback.thread() {

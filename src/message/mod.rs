@@ -13,6 +13,7 @@ use humansize::{format_size, DECIMAL};
 use matrix_sdk::ruma::events::receipt::ReceiptThread;
 use matrix_sdk::ruma::events::room::message::RoomMessageEventContentWithoutRelation;
 use matrix_sdk::ruma::events::room::MediaSource;
+use matrix_sdk::ruma::room_version_rules::RedactionRules;
 use ratatui::style::Color;
 use serde_json::json;
 use unicode_width::UnicodeWidthStr;
@@ -46,7 +47,6 @@ use matrix_sdk::ruma::{
     MilliSecondsSinceUnixEpoch,
     OwnedEventId,
     OwnedUserId,
-    RoomVersionId,
     UInt,
 };
 
@@ -553,7 +553,7 @@ impl MessageEvent {
         content_html(msgtype)
     }
 
-    fn redact(&mut self, redaction: SyncRoomRedactionEvent, version: &RoomVersionId) {
+    fn redact(&mut self, redaction: SyncRoomRedactionEvent, rules: &RedactionRules) {
         match self {
             MessageEvent::EncryptedOriginal(_) => return,
             MessageEvent::EncryptedRedacted(_) => return,
@@ -562,7 +562,7 @@ impl MessageEvent {
             MessageEvent::Local(_, _, _) => return,
             MessageEvent::Original(ev, _) | MessageEvent::Edit(ev) => {
                 let redacted = RedactedRoomMessageEvent {
-                    content: ev.content.clone().redact(version),
+                    content: ev.content.clone().redact(rules),
                     event_id: ev.event_id.clone(),
                     sender: ev.sender.clone(),
                     origin_server_ts: ev.origin_server_ts,
@@ -631,7 +631,11 @@ fn body_cow_content(msgtype: &MessageType) -> Cow<'_, str> {
 }
 
 fn body_cow_reason(unsigned: &RedactedUnsigned) -> Cow<'_, str> {
-    let reason = unsigned.redacted_because.content.reason.as_ref();
+    let reason = unsigned
+        .redacted_because
+        .deserialize()
+        .ok()
+        .and_then(|ev| ev.content.reason);
 
     if let Some(r) = reason {
         Cow::Owned(format!("[Redacted: {r:?}]"))
@@ -1296,8 +1300,8 @@ impl Message {
         Span::styled(sender, style).into()
     }
 
-    pub fn redact(&mut self, redaction: SyncRoomRedactionEvent, version: &RoomVersionId) {
-        self.event.redact(redaction, version);
+    pub fn redact(&mut self, redaction: SyncRoomRedactionEvent, rules: &RedactionRules) {
+        self.event.redact(redaction, rules);
         self.html = None;
         self.downloaded = false;
         self.image_preview = None;
