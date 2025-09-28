@@ -32,18 +32,22 @@
           src = ./.;
           cargoLock = {
             lockFile = ./Cargo.lock;
+            outputHashes = {
+              "editor-types-0.0.2" = "sha256-4Ooc12iAneNJdJLF4FM1f9ehW5KRowwhH/CGUHaYpzM=";
+            };
           };
           nativeBuildInputs = [ pkg-config ];
-          buildInputs =
-            [ openssl ]
-            ++ lib.optionals stdenv.isDarwin (
-              with darwin.apple_sdk.frameworks;
-              [
-                AppKit
-                Security
-                Cocoa
-              ]
-            );
+          buildInputs = [
+            openssl
+          ]
+          ++ lib.optionals stdenv.isDarwin (
+            with darwin.apple_sdk.frameworks;
+            [
+              AppKit
+              Security
+              Cocoa
+            ]
+          );
         };
 
         devShell = mkShell {
